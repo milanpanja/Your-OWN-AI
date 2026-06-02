@@ -1,4 +1,3 @@
-
 # VectorDB — Python Edition
 
 ### Setup & Run Guide (for Interview Demo)
@@ -94,44 +93,6 @@ Open your browser: **http://localhost:8080**
 
 * Type a question about your inserted documents
 * Explain: embed question → HNSW search → top chunks → LLM generates answer
-
----
-
-## 💬 Interview Q&A Cheat Sheet
-
-**Q: What is a Vector Database?**
-
-> A database that stores vectors (arrays of numbers) and lets you find the most semantically similar items. Instead of exact keyword matching, it finds things that are conceptually close — even if the words are different.
-
-**Q: What is HNSW?**
-
-> Hierarchical Navigable Small World — a multilayer graph. Layer 0 has all nodes densely connected. Higher layers have fewer nodes with long-range shortcuts (like a highway). Search starts at the top and zooms in, giving O(log N) speed instead of O(N) brute force.
-
-**Q: Why is KD-Tree bad at high dimensions?**
-
-> KD-Tree prunes subtrees using axis-aligned distance bounds. In high dimensions, almost all space is near the boundary of the hypersphere — no subtrees get pruned, and it degenerates to O(N). HNSW doesn't have this "curse of dimensionality" problem.
-
-**Q: What is RAG?**
-
-> Retrieval-Augmented Generation. Instead of relying only on the LLM's training data, we: (1) embed the user's question, (2) find the most relevant document chunks via HNSW, (3) inject those chunks as context, (4) let the LLM generate a grounded answer.
-
-**Q: What is cosine similarity?**
-
-> Measures the angle between two vectors, ignoring magnitude. cosine_distance = 1 - (dot product / product of magnitudes). A distance of 0 means identical direction (most similar), 1 means perpendicular (unrelated), 2 means opposite.
-
-**Q: How does your Python implementation differ from C++?**
-
-> Logic is identical — same HNSW insert/search algorithm, same KD-Tree recursion, same distance formulas. Python uses built-in `heapq` for priority queues and `threading.Lock` for thread safety. The HTTP server uses Python's standard `http.server`. No external vector libraries — everything is implemented from scratch.
-
-**Q: What are the time complexities?**
-
-> * BruteForce: O(N·d) search — checks every vector
-> * KD-Tree:    O(log N) average, O(N) worst case (high dims)
-> * HNSW:       O(log N) average for approximate nearest neighbor
-
-**Q: How does text chunking work?**
-
-> Long documents are split into overlapping chunks (250 words each, 30-word overlap). The overlap prevents losing information at boundaries. Each chunk gets its own embedding and HNSW entry.
 
 ---
 
